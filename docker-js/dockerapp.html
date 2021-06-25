@@ -1,0 +1,191 @@
+<style>
+    body {
+
+      background-image: url(docker-js/docker_bg.jpg);
+    }
+    .button {
+        width: 10%;
+        background-color: rgb(124, 212, 235);
+        border: none;
+        border-radius: 15px;
+        color: black;
+        padding: 10px 10px;
+        text-shadow: 1px 1px ;
+        text-align: center;
+        display: inline-block;
+        font-size: 20px;
+        font-weight: bolder;
+        margin: 10px;
+        cursor: pointer;
+    }
+    #container {
+      padding: 20px;
+      height: auto;
+      width: 70%;
+      margin: auto;
+      background-color: rgb(124,212,235);
+      text-align: center;
+    }
+    #upper_line{
+        width: auto;
+        height: 6%;
+        text-align: center;
+        background-color: white;
+        margin-bottom: 10px;
+
+    }
+    #cmd_op {
+      width: auto;
+      height: 60%;
+      background-color: white;
+      padding-left: 10px;
+      font-size: 22px;
+      color: black;
+      font-weight: bold;
+      text-align: justify;
+      margin-top: 5px;
+      overflow: auto;
+    }
+    #button_col{
+        width: auto;
+        height: auto;
+        background-color: white;
+        margin-bottom: 2%;
+    }
+    #input_box{
+      text-align: left;
+      float: left;
+      width: 20%;
+      font-size: 24px;
+      font-weight: bold;
+      vertical-align: middle;
+      box-sizing: border-box;
+      /* background-color: #000; */
+      color: black;
+      opacity: inherit;
+    }
+    #user_input{
+     left: -50px;
+     margin-top: 15px;
+     float: left;
+     height: 6%;
+     font-size: 20px;
+     font-weight: lighter;
+     width: auto;
+     vertical-align: middle;
+     color: black;
+     box-sizing: border-box;
+     border: solid;
+     lighting-color: purple;
+    }
+</style>
+
+<script>
+    function myFunction0() {
+        var cont_name = prompt("Please enter your container name", "cont");
+        var img_name = prompt("Please enter your image name","image:tag");
+        if (cont_name != null && img_name!= null) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://13.127.93.191/cgi-bin/linux.py?x=" + "docker run -dit --name " + cont_name + " " + img_name , false);
+        xhr.send();
+        var output = xhr.responseText;
+        document.getElementById("cmd_op").innerHTML = output;
+        }
+    }
+    function myFunction1() {
+        document.getElementById("cmd_op").innerHTML = "";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://13.127.93.191/cgi-bin/linux.py?x=" + "docker images", false);
+        xhr.send();
+        var output = xhr.responseText;
+        document.getElementById("cmd_op").innerHTML = output;
+    }
+
+    function myFunction2() {
+        var cont_name = prompt("Please enter your container name", "cont");
+        if (cont_name != null) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://13.127.93.191/cgi-bin/linux.py?x=" + "docker start " + cont_name, false)
+        xhr.send();
+        var output = xhr.responseText;
+        document.getElementById("cmd_op").innerHTML = output;
+        }
+    }
+    function myFunction3() {
+        document.getElementById("cmd_op").innerHTML = "";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://13.127.93.191/cgi-bin/linux.py?x=" + "docker ps", false);
+        xhr.send();
+        var output = xhr.responseText;
+        document.getElementById("cmd_op").innerHTML = output;
+    }
+    function myFunction4() {
+        var cont_name = prompt("Please enter your container name", "cont");
+        if (cont_name != null) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://13.127.93.191/cgi-bin/linux.py?x=" + "docker stop " + cont_name, false);
+        xhr.send();
+        var output = xhr.responseText;
+        document.getElementById("cmd_op").innerHTML = output;
+        }
+    }
+    function myFunction5() {
+        var cont_name = prompt("Please enter your container name", "cont");
+        if (cont_name != null) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://13.127.93.191/cgi-bin/linux.py?x=" + "docker rm -f " + cont_name, false);
+        xhr.send();
+        var output = xhr.responseText;
+        document.getElementById("cmd_op").innerHTML = output;
+        }
+    }
+    function myFunction7() {
+        document.getElementById("cmd_op").innerHTML = "";
+        var img_name = prompt("Please enter your image name to pull from docker hub", "img:version");
+        if (img_name != null) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://192.168.43.134/cgi-bin/linux.py?x=" + "docker pull " + img_name, true);
+        xhr.send();
+        var output = xhr.responseText;
+        document.getElementById("cmd_op").innerHTML = output;
+        }
+    }
+
+    // Main Function
+    function myfunction6() {
+        document.getElementById('cmd_op').innerHTML = "";
+        var i = document.getElementById("user_input").value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://13.127.93.191/cgi-bin/linux.py?x=" + i, false);
+        xhr.send();
+        var output = xhr.responseText;
+        document.getElementById("cmd_op").innerHTML = output;
+
+        //Clear input text box
+        document.getElementById('input_box').value = "";
+      }
+</script>
+
+<div id="body">
+    <div id="upper_line">
+        <p id="myhead" style="color: rgb(51,39,167); font-size: 30px; font-weight: bolder;">DOCKER PLAY</p>
+    </div>
+    <div id="container">
+        <div id="button_col">
+            <a class="button" href="https://hub.docker.com" style="text-decoration:none" >Docker Hub</a>
+            <button class="button" onclick="myFunction0();" >Run New</button>
+            <button class="button" onclick="myFunction1();">Images</button>
+            <button class="button" onclick="myFunction7();">Pull Image</button>
+            <button class="button" onclick="myFunction2();" >Start</button>
+            <button class="button" onclick="myFunction3(); ">List</button>
+            <button class="button" onclick="myFunction4();" >Stop </button>
+            <button class="button" onclick="myFunction5(); ">Delete</button>
+        </div>
+        <p type="text" id="input_box" size="28">root@localhost:~$</p>
+        <input id="user_input" type="text" placeholder="Enter command" size="35">
+        <button class="button" style="background-color: white;" onclick="myfunction6(); ">Output</button><br><br>
+        <pre><div id="cmd_op"></div></pre>
+    </div>
+
+</div>
+
