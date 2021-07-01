@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Terminal Console</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+/* 
+/* Style the side navigation */
+/* .sidenav {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+} */
+
+
+/* Side navigation links */
+/* .sidenav a {
+  color: white;
+  padding: 16px;
+  text-decoration: none;
+  display: block;
+} */
+
+/* Change color on hover */
+/* .sidenav a:hover {
+  background-color: #ddd;
+  color: black;
+}  */
+#heading {
+    font-size: 50px;
+    /* font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; */
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    color: blue;
+    text-shadow: 1px 1px;
+    text-align: center;
+}
+.previous {
+  background-color:rgb(124, 212, 235);
+  color: black;
+}
+.round {
+  border-radius: 50%;
+}
+
+/* Style the content */
+.content {
+  margin-left: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+#input_box_text{
+      text-align: left;
+      float: left;
+      width: auto;
+      margin: 10px;
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      vertical-align: middle;
+      /* box-sizing: border-box; */
+      /* background-color: #000; */
+      color: black;
+      opacity: inherit;
+    }
+
+/* Style the middle container*/
+#container {
+      padding: 20px;
+      height: 500px;
+      width: 100%;
+      margin-right: 20px;
+      background-color: rgb(124,212,235);
+      text-align: center;
+    }
+#cmd_op {
+      width: auto;
+      height: 300px;
+      background-color: white;
+      padding-left: 10px;
+      font-size: 22px;
+      color: black;
+      font-weight: bold;
+      text-align: justify;
+      margin-top: 5px;
+      overflow: auto;
+    }
+  .button {
+        width: 10%;
+        background-color: rgb(124, 212, 235);
+        border: none;
+        border-radius: 15px;
+        color: black;
+        padding: 10px 10px;
+        text-shadow: 1px 1px ;
+        text-align: center;
+        display: inline-block;
+        font-size: 20px;
+        font-weight: bolder;
+        margin: 10px;
+        cursor: pointer;
+    }
+.user_input{
+     margin-top: 20px;
+     float: left;
+     height: 6%;
+     font-size: 24px;
+     font-weight: lighter;
+     width: auto;
+     vertical-align: middle;
+     color: black;
+     box-sizing: border-box;
+     border: solid;
+     lighting-color:blue;
+    }
+a {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+  margin-left: 5px;
+}
+
+a:hover {
+  background-color: #ddd;
+  color: black;
+}
+</style>
+</head>
+<body>
+
+
+<a href="k8sapp.html" class="previous round">&#8249;</a>
+<div class="content">
+  <h2 id="heading">Terminal</h2>
+  <p>Run commands to use the kubernetes</p>
+  <div id="container">
+    <p id="input_box_text">root@localhost:~#</p>
+    <input class="user_input" id="usr_input" type="text" placeholder="Enter command">
+    <button class="button" style="background-color: white;" onclick="myfunction6();">Output</button><br><br>
+    <pre><div id="cmd_op"></div></pre>
+    <p id="input_box_text">Provide your requirement:</p>
+    <input class="user_input" id="si_input" type="text" placeholder="In simple language">
+    <button class="button" style="background-color: white;" onclick="kube(); ">Output</button><br><br>
+</div>
+</div>
+</body>
+</html>
+
+<script>
+function myfunction6() {
+   document.getElementById('cmd_op').innerHTML = "";
+   var i = document.getElementById("usr_input").value;
+   var xhr = new XMLHttpRequest();
+   xhr.open("GET", "http://192.168.99.103/cgi-bin/kube.py?x=" + i, false);
+   xhr.send();
+   var output = xhr.responseText;
+   document.getElementById("cmd_op").innerHTML = output;
+
+   //Clear input text box
+   document.getElementById('usr_input').value = "";
+}
+
+function kube() {
+    document.getElementById("cmd_op").innerHTML = "";
+    var i = document.getElementById("si_input").value
+    var stat = "0"
+    var final = ""
+    if (((i.includes("deployments")) || (i.includes("deploy")) || (i.includes("deployment"))) && ((i.includes("create")) || (i.includes("generate")) || (i.includes("launch")))) {
+      var image = prompt("Enter the name of image: ")
+      var deployment_name = prompt("Enter the name of Deployment: ")
+      var stat = "1"
+      var final = stat + " " + image + " " + deployment_name 
+      }
+  
+    else if (((i.includes("pods")) || (i.includes("pod"))) && ((i.includes("create")) || (i.includes("generate")) || (i.includes("launch")))) {
+      var image = prompt("Enter the name of image: ")
+      var pod_name = prompt("Enter the name of pod: ")
+      var stat = "2"
+      var final = stat + " " + image + " " + pod_name
+      
+      }
+  
+    else if (((i.includes("pods")) || (i.includes("pod"))) && ((i.includes("delete")) || (i.includes("remove")) || (i.includes("detach")))) {
+      var pod_name = prompt("Enter the name of pod: ")
+      var stat = "3"
+      var final = stat + " " + pod_name
+      
+      }
+  
+    else if (((i.includes("deployments")) || (i.includes("deploy")) || (i.includes("deployment"))) && ((i.includes("delete")) || (i.includes("remove")) || (i.includes("detach")))) {
+      var deployment_name = prompt("Enter the name of Deployment: ")
+      var stat = "4"
+      var final = stat + " " + deployment_name
+      }
+  
+    else if (((i.includes("deployments")) || (i.includes("deploy")) || (i.includes("service")) || (i.includes("svc")) || (i.includes("deployment"))) && ((i.includes("expose"))  || (i.includes("display")))) {
+      var deployment_name = prompt("Enter the name of Deployment: ")
+      var port_no = prompt("Enter the port number where you want to export your deployment: ")
+      var expose_type = prompt(" 1. ClusterIP \n 2.ExternalNames \n 3.LoadBalancer 4.NodePort \n Enter the type which you want to export ")
+      var stat = "5"
+      var final = stat + " " + deployment_name + " " + port_no + " " + expose_type
+      }
+  
+    else if (((i.includes("deployments")) || (i.includes("deploy")) || (i.includes("deployment"))) && ((i.includes("scale")) || (i.includes("increase")) || (i.includes("decrease")) || (i.includes("scale up")) || (i.includes("scale down")))) {
+      var deployment_name = prompt("Enter the name of Deployment: ")
+      var replica = prompt("Enter number of replicas: ")
+      var stat = "6"
+      var final = stat + " " + deployment_name + " " + replica
+      }
+  
+    else if (((i.includes("pods")) || (i.includes("pod"))) && ((i.includes("show")) || (i.includes("get")) || (i.includes("list")))) {
+      var stat = "7"
+      var final = stat 
+      
+      }
+  
+    else if (((i.includes("deployments"))|| (i.includes("deployment")) || (i.includes("deploy"))) && ((i.includes("show")) || (i.includes("get")) || (i.includes("list")))) {
+      var stat = "8"
+      var final = stat 
+      
+      }
+    else if (((i.includes("service")) || (i.includes("services")) || (i.includes("svc"))) && ((i.includes("show")) || (i.includes("get")) || (i.includes("list")))) {
+      var stat = "9"
+      var final = stat
+      
+      }
+  
+    else if (((i.includes("all")) || (i.includes("everything"))) && ((i.includes("delete")) || (i.includes("remove")) || (i.includes("destroy")))) {
+      var stat = "10"
+      var final = stat 
+      }
+  
+    else {
+      var stat = "11"
+      var final = stat 
+      }
+  
+      
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://192.168.99.103/cgi-bin/mn.py?x= " + final, "false")
+    xhr.send();
+    
+    xhr.onload = function ()
+      {
+      document.getElementById('cmd_op').innerHTML = xhr.responseText; 
+          }
+      document.getElementById("si_input").value = "";
+    
+  }
+</script>

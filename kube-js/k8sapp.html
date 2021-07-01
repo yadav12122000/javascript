@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {font-family: Arial, Helvetica, sans-serif; background-color: rgb(229, 215, 230);}
+
+.navbar {
+  width: 100%;
+  background-color: #555;
+  overflow: auto;
+}
+
+.navbar a {
+  float: left;
+  padding: 12px;
+  color: white;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.navbar a:hover {
+  background-color: #000;
+}
+
+.active {
+  background-color: #04AA6D;
+}
+
+@media screen and (max-width: 500px) {
+  .navbar a {
+    float: none;
+    display: block;
+  }
+}
+.side_nav{
+  height: 100%;
+  width: 350px;
+  position: fixed;
+  margin-left: 8px;
+  z-index: 1;
+  /* top: 0; */
+  left: 0;
+  background-color: rgb(255, 255, 255);
+  overflow-x: hidden;
+}
+.side_nav a {
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color on hover */
+.side_nav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+.form-container input[type=text], .form-container input[type=text] {
+  width: 90%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+.form-container input[type=text]:focus, .form-container input[type=text]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+.form-container .btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+#cmd_op {
+      margin-left: 350px;
+      margin-top: 10px;
+      width: auto;
+      height: 500px;
+      background-color: rgb(193, 199, 233);
+      padding-left: 10px;
+      font-size: 22px;
+      color: black;
+      font-weight: bold;
+      text-align: justify;
+      margin-top: 5px;
+      overflow: auto;
+    }
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+
+</style>
+<body>
+<div class="navbar">
+  <a class="active"><i class="fa fa-fw fa-home"></i> Home</a> 
+  <a class="active" href="ter.html"><i class="fa fa-fw fa-terminal"></i> Terminal</a> 
+  <a class="active" href="https://www.linkedin.com/in/lalit-yadav12/"><i class="fa fa-fw fa-linkedin"></i> Contact</a> 
+  <a class="active" style="float: right;" href="https://kubernetes.io/docs/home/"><i class="fa fa-fw fa-certificate"></i> K8S Documentation</a>
+</div>
+
+
+<div class="side_nav">
+  <p style="font-size: 30px; font-weight: 900; color: midnightblue;">Kube Play</p>
+  <a onclick="openForm()" style="font-size: 20px;">Launch Pod</a><br>
+  <a onclick="openForm2()" style="font-size: 20px;">Launch Deployment</a><br>
+  <a onclick="openForm7()" style="font-size: 20px;">Scale Replicas</a><br>
+  <a onclick="openForm3()" style="font-size: 20px;">Get Resources</a><br>
+  <a onclick="openForm4()" style="font-size: 20px;">Info About Resource</a><br>
+  <a onclick="openForm5()" style="font-size: 20px;">Delete Resource</a><br>
+  <a onclick="openForm6()" style="font-size: 20px;">Expose Service</a><br>
+  <a onclick="delete_all()" style="font-size: 20px;">Delete all Resources</a><br>
+  <div class="form-popup" id="myForm">
+    <form id ="myform" onsubmit="return false;" class="form-container">
+      <h1>Launch Pod</h1>
+  
+      <label for="pod_name "><b>Pod Name</b></label>
+      <input id="podname" type="text" placeholder="Enter Pod Name" name="pod_name" required>
+  
+      <label for="image"><b>Image</b></label>
+      <input id="imgname" type="text" placeholder="Enter Image Name" name="image" required>
+  
+      <button type="submit" class="btn" onclick="launch_pod(); closeForm();">Launch</button>
+      <button type="button" class="btn cancel" onclick="return closeForm();">Close</button>
+    </form>
+  </div>
+  <div class="form-popup" id="myForm2">
+    <form id ="myform2" onsubmit="return false;" class="form-container">
+      <h1>Launch Deployment</h1>
+  
+      <label for="deployment_name "><b>Deployment Name</b></label>
+      <input id="deploymentname" type="text" placeholder="Enter Deployment Name" name="deployment_name" required>
+  
+      <label for="image"><b>Image</b></label>
+      <input id="imagename" type="text" placeholder="Enter Image Name" name="image" required>
+  
+      <button type="submit" class="btn" onclick="launch_deployment(); closeForm2();">Launch</button>
+      <button type="button" class="btn cancel" onclick="return closeForm2();">Close</button>
+    </form>
+  </div>
+</div>
+<div class="form-popup" id="myForm3">
+  <form id ="myform3" onsubmit="return false;" class="form-container">
+    <h1>List Resources</h1>
+
+    <label for="re_type "><b>Resource Type</b></label>
+    <input id="re_type" type="text" placeholder="Enter Resource(e.g. pod, svc)" name="re_type" required>
+
+    <label for="re_name"><b>Name of Resource</b></label>
+    <input id="re_name" type="text" placeholder="Enter Resource Name" name="re_name" required>
+
+    <button type="submit" class="btn" onclick="get_resource(); closeForm3();">Get</button>
+    <button type="button" class="btn cancel" onclick="return closeForm3();">Close</button>
+  </form>
+</div>
+</div>
+<div class="form-popup" id="myForm4">
+  <form id ="myform4" onsubmit="return false;" class="form-container">
+    <h1>Details about Resources</h1>
+
+    <label for="re_type "><b>Resource Type</b></label>
+    <input id="de_type" type="text" placeholder="Enter Resource(e.g. pod, svc)" name="re_type" required>
+
+    <label for="re_name"><b>Name of Resource</b></label>
+    <input id="de_name" type="text" placeholder="Enter Resource Name" name="re_name" required>
+
+    <button type="submit" class="btn" onclick="detail_resource(); closeForm4();">Info</Details></button>
+    <button type="button" class="btn cancel" onclick="return closeForm4();">Close</button>
+  </form>
+</div>
+</div>
+<div class="form-popup" id="myForm5">
+  <form id ="myform5" onsubmit="return false;" class="form-container">
+    <h1>Delete Resources</h1>
+
+    <label for="re_type "><b>Resource Type</b></label>
+    <input id="del_type" type="text" placeholder="Enter Resource(e.g. pod, svc)" name="re_type" required>
+
+    <label for="re_name"><b>Name of Resource</b></label>
+    <input id="del_name" type="text" placeholder="Enter Resource Name" name="re_name" required>
+
+    <button type="submit" class="btn" onclick="delete_resource(); closeForm5();">Delete</Details></button>
+    <button type="button" class="btn cancel" onclick="return closeForm5();">Close</button>
+  </form>
+</div>
+</div>
+<div class="form-popup" id="myForm6">
+  <form id ="myform6" onsubmit="return false;" class="form-container">
+    <h1>Expose Service</h1>
+
+    <label for="re_type "><b>Resource Type</b></label>
+    <input id="svc_res" type="text" placeholder="Enter Resource(e.g. pod,svc,deploy)" name="re_type" required>
+
+    <label for="re_name"><b>Name of Resource</b></label>
+    <input id="svc_name" type="text" placeholder="Enter Resource Name" name="re_name" required>
+
+    <label for="re_port"><b>Port No. to expose </b></label>
+    <input id="svc_port" type="text" placeholder="Enter port No.(e.g.- 80,8080,443)" name="re_port" required>
+
+    <label for="re_tpe"><b>Service Type</b></label>
+    <input id="svc_type" type="text" placeholder="(NodePort/ClusterIP/LoadBalancer)" name="re_tpe" required>
+
+    <button type="submit" class="btn" onclick="expose_service(); closeForm6();">Expose</Details></button>
+    <button type="button" class="btn cancel" onclick="return closeForm6();">Close</button>
+  </form>
+</div>
+</div>
+<div class="form-popup" id="myForm7">
+  <form id ="myform7" onsubmit="return false;" class="form-container">
+    <h1>Scale Replicas</h1>
+
+    <label for="rep_no "><b>Expected Replicas</b></label>
+    <input id="rep_no" type="text" placeholder="Enter no of expected replicas" name="rep_no" required>
+
+    <label for="dep_name"><b>Name of Resource</b></label>
+    <input id="dep_name" type="text" placeholder="Enter Deployment Name" name="dep_name" required>
+
+    <button type="submit" class="btn" onclick="scale_replica(); closeForm7();">Scale</Details></button>
+    <button type="button" class="btn cancel" onclick="return closeForm7();">Close</button>
+  </form>
+</div>
+</div>
+<pre><div id="cmd_op"></div></pre>
+
+
+<script>
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+}
+function openForm2() {
+  document.getElementById("myForm2").style.display = "block";
+}
+function openForm3() {
+  document.getElementById("myForm3").style.display = "block";
+}
+function openForm4() {
+  document.getElementById("myForm4").style.display = "block";
+}
+function openForm5() {
+  document.getElementById("myForm5").style.display = "block";
+}
+function openForm6() {
+  document.getElementById("myForm6").style.display = "block";
+}
+function openForm7() {
+  document.getElementById("myForm7").style.display = "block";
+}
+// function closeSelf(){
+//     self.
+//     self.close();
+//     return true;
+// }
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+  // document.getElementsByClassName("form-container").display= "none"; 
+}
+function closeForm2() {
+  document.getElementById("myForm2").style.display = "none";
+}
+function closeForm3() {
+  document.getElementById("myForm3").style.display = "none";
+}
+function closeForm4() {
+  document.getElementById("myForm4").style.display = "none";
+}
+function closeForm5() {
+  document.getElementById("myForm5").style.display = "none";
+}
+function closeForm6() {
+  document.getElementById("myForm6").style.display = "none";
+}
+function closeForm7() {
+  document.getElementById("myForm7").style.display = "none";
+}
+function launch_pod() {
+  var pod = document.getElementById("podname").value;
+  var image = document.getElementById("imgname").value;
+  document.getElementById('cmd_op').innerHTML = "";
+  // var i = document.getElementById("user_input").value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "http://192.168.99.103/cgi-bin/kube.py?x=" + "kubectl run " + pod + " --image " + image, false);
+  xhr.send();
+  var output = xhr.responseText;
+  document.getElementById("cmd_op").innerHTML = output;
+}
+function launch_deployment() {
+  var deployment = document.getElementById("deploymentname").value;
+  var image = document.getElementById("imagename").value;
+  document.getElementById('cmd_op').innerHTML = "";
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "http://192.168.99.103/cgi-bin/kube.py?x=" + "kubectl create deployment " + deployment + " --image=" + image, false);
+  xhr.send();
+  var output = xhr.responseText;
+  document.getElementById("cmd_op").innerHTML = output; 
+}
+function get_resource() {
+  var r_type = document.getElementById("re_type").value;
+  var r_name = document.getElementById("re_name").value;
+  document.getElementById('cmd_op').innerHTML = "";
+  // var i = document.getElementById("user_input").value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "http://192.168.99.103/cgi-bin/kube.py?x=" + "kubectl get " + r_type + " " + r_name, false);
+  xhr.send();
+  var output = xhr.responseText;
+  document.getElementById("cmd_op").innerHTML = output;
+}
+function detail_resource() {
+  var r_type = document.getElementById("de_type").value;
+  var r_name = document.getElementById("de_name").value;
+  document.getElementById('cmd_op').innerHTML = "";
+  // var i = document.getElementById("user_input").value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "http://192.168.99.103/cgi-bin/kube.py?x=" + "kubectl describe " + r_type + " " + r_name, false);
+  xhr.send();
+  var output = xhr.responseText;
+  document.getElementById("cmd_op").innerHTML = output;
+}
+function delete_resource() {
+  var r_type = document.getElementById("del_type").value;
+  var r_name = document.getElementById("del_name").value;
+  document.getElementById('cmd_op').innerHTML = "";
+  // var i = document.getElementById("user_input").value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "http://192.168.99.103/cgi-bin/kube.py?x=" + "kubectl delete " + r_type + " " + r_name, false);
+  xhr.send();
+  var output = xhr.responseText;
+  document.getElementById("cmd_op").innerHTML = output;
+}
+function expose_service() {
+  var r_res = document.getElementById("svc_res").value;
+  var r_name = document.getElementById("svc_name").value;
+  var r_port = document.getElementById("svc_port").value;
+  var r_type = document.getElementById("svc_type").value;
+  document.getElementById('cmd_op').innerHTML = "";
+  // var i = document.getElementById("user_input").value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "http://192.168.99.103/cgi-bin/kube.py?x=" + "kubectl expose " + r_res + " " + r_name + " --port=" + r_port + " --type=" + r_type, false);
+  xhr.send();
+  var output = xhr.responseText;
+  document.getElementById("cmd_op").innerHTML = output;
+}
+function delete_all() {
+  document.getElementById('cmd_op').innerHTML = "";
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "http://192.168.99.103/cgi-bin/kube.py?x=" + "kubectl delete all -all" , false);
+  xhr.send();
+  var output = xhr.responseText;
+  document.getElementById("cmd_op").innerHTML = output;
+}
+function scale_replica() {
+  var r_no= document.getElementById("rep_no").value;
+  var r_name = document.getElementById("dep_name").value;
+  document.getElementById('cmd_op').innerHTML = "";
+  // var i = document.getElementById("user_input").value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "http://192.168.99.103/cgi-bin/kube.py?x=" + "kubectl scale deployment " + r_name + " --replicas=" + r_no, false);
+  xhr.send();
+  var output = xhr.responseText;
+  document.getElementById("cmd_op").innerHTML = output;
+}
+</script>
+
+</body>
+</html> 
+
