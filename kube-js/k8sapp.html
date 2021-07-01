@@ -271,15 +271,9 @@ function openForm6() {
 function openForm7() {
   document.getElementById("myForm7").style.display = "block";
 }
-// function closeSelf(){
-//     self.
-//     self.close();
-//     return true;
-// }
 
 function closeForm() {
   document.getElementById("myForm").style.display = "none";
-  // document.getElementsByClassName("form-container").display= "none"; 
 }
 function closeForm2() {
   document.getElementById("myForm2").style.display = "none";
@@ -359,7 +353,6 @@ function expose_service() {
   var r_port = document.getElementById("svc_port").value;
   var r_type = document.getElementById("svc_type").value;
   document.getElementById('cmd_op').innerHTML = "";
-  // var i = document.getElementById("user_input").value;
   var xhr = new XMLHttpRequest();
   xhr.open("GET", "http://192.168.99.103/cgi-bin/kube.py?x=" + "kubectl expose " + r_res + " " + r_name + " --port=" + r_port + " --type=" + r_type, false);
   xhr.send();
