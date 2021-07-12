@@ -10,7 +10,7 @@ Task Description:
 
 📌 Note : You may create your own detection model .
 
-Extract the data folder for training dataset and 'model_class.h5' for pre-trained model.
+Extract the data folder for training dataset and 'letter_class.h5' for pre-trained model.
 
 Approach:-
 ------------
